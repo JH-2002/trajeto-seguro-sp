@@ -1,0 +1,58 @@
+# Atualiza os dados da SSP-SP automaticamente todo mês e faz commit do JSON gerado.
+# Também pode ser disparado manualmente na aba Actions (com anos personalizados).
+name: Atualizar dados SSP-SP
+
+on:
+  schedule:
+    - cron: '17 9 5 * *' # dia 5 de cada mês, 06:17 (Brasília)
+  workflow_dispatch:
+    inputs:
+      years:
+        description: 'Anos (ex.: 2024-2026). Vazio = atual e os dois anteriores.'
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install --no-audit --no-fund
+
+      # Reaproveita as planilhas já baixadas: o scraper só baixa o que mudou.
+      - uses: actions/cache@v4
+        with:
+          path: data/raw
+          key: ssp-raw-${{ github.run_id }}
+          restore-keys: ssp-raw-
+
+      - name: Baixar planilhas da SSP-SP
+        run: npm run data:scrape -- ${{ inputs.years && format('--years {0}', inputs.years) || '' }}
+
+      - name: Gerar JSON agregado
+        run: NODE_OPTIONS=--max-old-space-size=6144 npm run data -- --raw-dir data/raw
+
+      # Iluminação muda pouco; se o GeoSampa e o OSM estiverem fora do ar, mantém o arquivo anterior.
+      - name: Atualizar iluminação pública
+        continue-on-error: true
+        run: npm run data:lighting
+
+      - name: Commit se houver mudança
+        run: |
+          if git diff --quiet -- public/data; then
+            echo "Sem mudanças nos dados."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data
+          git commit -m "dados: atualização SSP-SP $(date +%Y-%m-%d)"
+          git push

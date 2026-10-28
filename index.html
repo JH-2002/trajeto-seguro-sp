@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content="Mapa 3D da criminalidade em São Paulo (dados SSP-SP) com sugestão de rotas mais seguras." />
+    <title>Trajeto Seguro SP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="map" aria-label="Mapa de São Paulo"></div>
+
+    <aside class="panel" id="panel">
+      <header class="panel__head">
+        <div class="brand">
+          <span class="brand__mark" aria-hidden="true"></span>
+          <div>
+            <h1>Trajeto Seguro <span>SP</span></h1>
+            <p>Criminalidade, acidentes e rotas mais seguras</p>
+          </div>
+        </div>
+        <button class="icon-btn" id="collapseBtn" aria-label="Recolher painel" title="Recolher painel">
+          <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6" /></svg>
+        </button>
+      </header>
+
+      <div class="panel__body">
+        <div class="banner" id="dataBanner" hidden></div>
+
+        <section class="card" aria-labelledby="routeTitle">
+          <h2 id="routeTitle">Rota</h2>
+
+          <div class="stops">
+            <div class="field" data-stop="origin">
+              <span class="field__dot field__dot--origin"></span>
+              <input id="originInput" type="text" placeholder="De onde você sai?" autocomplete="off" spellcheck="false" />
+              <button class="field__pick" id="locateBtn" title="Usar minha localização" aria-label="Usar minha localização como origem">
+                <svg viewBox="0 0 24 24"><path d="M3 11l18-8-8 18-2-8z" /></svg>
+              </button>
+              <button class="field__pick" data-pick="origin" title="Escolher no mapa" aria-label="Escolher origem no mapa">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M12 2v4M12 18v4M2 12h4M18 12h4" /></svg>
+              </button>
+              <ul class="suggestions" role="listbox"></ul>
+            </div>
+            <div class="field" data-stop="destination">
+              <span class="field__dot field__dot--destination"></span>
+              <input id="destinationInput" type="text" placeholder="Para onde vai?" autocomplete="off" spellcheck="false" />
+              <button class="field__pick" data-pick="destination" title="Escolher no mapa" aria-label="Escolher destino no mapa">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M12 2v4M12 18v4M2 12h4M18 12h4" /></svg>
+              </button>
+              <ul class="suggestions" role="listbox"></ul>
+            </div>
+            <button class="swap-btn" id="swapBtn" title="Inverter origem e destino" aria-label="Inverter origem e destino">
+              <svg viewBox="0 0 24 24"><path d="M7 4v16M7 4l-3 3M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3" /></svg>
+            </button>
+          </div>
+
+          <div class="segmented" id="modeSeg" role="radiogroup" aria-label="Modo de deslocamento">
+            <button data-mode="foot" class="is-active" role="radio" aria-checked="true">A pé</button>
+            <button data-mode="bike" role="radio" aria-checked="false">Bicicleta</button>
+            <button data-mode="car" role="radio" aria-checked="false">Carro</button>
+          </div>
+
+          <label class="row-label" for="tolerance">
+            <span>Tempo extra aceito</span>
+            <output id="toleranceOut">+30%</output>
+          </label>
+          <input class="range" type="range" id="tolerance" min="0" max="100" step="5" value="30" />
+
+          <label class="switch">
+            <input type="checkbox" id="avoidAccidents" checked />
+            <span class="switch__track"></span>
+            <span>Evitar trechos com acidentes</span>
+          </label>
+
+          <button class="primary" id="routeBtn" disabled>
+            <span>Calcular rota segura</span>
+          </button>
+          <p class="status" id="routeStatus" role="status"></p>
+          <div class="results" id="routeResults"></div>
+        </section>
+
+        <section class="card" aria-labelledby="timeTitle">
+          <h2 id="timeTitle">Horário</h2>
+          <div class="timeline" id="timeline">
+            <div class="timeline__head">
+              <output id="hourOut">Todos os horários</output>
+              <div class="chips chips--small">
+                <button class="chip is-on" data-hour="todos">Todos</button>
+                <button class="chip" data-hour="agora">Agora</button>
+              </div>
+            </div>
+            <div class="timeline__bars" id="hourBars" title="Ocorrências na cidade por hora (clique para escolher)"></div>
+            <div class="timeline__controls">
+              <button class="play-btn" id="playBtn" aria-pressed="false" aria-label="Animar as 24 horas">
+                <svg class="i-play" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" /></svg>
+                <svg class="i-pause" viewBox="0 0 24 24"><path d="M7 4v16M17 4v16" /></svg>
+              </button>
+              <input class="range range--hours is-dimmed" type="range" id="hourRange" min="0" max="23" step="1" value="21" aria-label="Hora do dia" />
+            </div>
+            <div class="timeline__ticks"><span>0h</span><span>6h</span><span>12h</span><span>18h</span><span>23h</span></div>
+          </div>
+          <p class="hint">A rota sugerida considera o horário escolhido. À noite, ruas mal iluminadas pesam mais.</p>
+        </section>
+
+        <section class="card" aria-labelledby="layersTitle">
+          <h2 id="layersTitle">Camadas</h2>
+          <div class="toggles">
+            <label class="toggle"><input type="checkbox" data-layer="heat" checked /><span>Mapa de calor</span></label>
+            <label class="toggle"><input type="checkbox" data-layer="columns" /><span>Colunas 3D</span></label>
+            <label class="toggle"><input type="checkbox" data-layer="accidents" /><span>Acidentes</span></label>
+            <label class="toggle"><input type="checkbox" data-layer="lights" /><span>Iluminação</span></label>
+            <label class="toggle"><input type="checkbox" data-layer="buildings" checked /><span>Prédios 3D</span></label>
+          </div>
+
+          <p class="sub">Tipos de crime</p>
+          <div class="chips" id="categoryChips"></div>
+
+          <label class="switch switch--compact" title="Ocorrências recentes valem mais no cálculo da rota">
+            <input type="checkbox" id="recency" />
+            <span class="switch__track"></span>
+            <span>Priorizar ocorrências recentes <small id="recencyNote">meia-vida de 12 meses</small></span>
+          </label>
+
+          <label class="switch switch--compact" title="Menos resolução, horizonte simplificado e sem prédios 3D">
+            <input type="checkbox" id="liteMode" />
+            <span class="switch__track"></span>
+            <span>Modo leve <small>para computadores mais lentos</small></span>
+          </label>
+
+          <div class="legend">
+            <div class="legend__bar"></div>
+            <div class="legend__labels"><span>Menos ocorrências</span><span>Mais</span></div>
+          </div>
+          <div class="stats" id="stats"></div>
+          <p class="hint">Clique em qualquer ponto do mapa para ver os detalhes da região.</p>
+        </section>
+      </div>
+
+      <footer class="panel__foot">
+        <p id="sourceInfo"></p>
+        <p>O índice é estatístico, baseado em registros passados. Não garante segurança.</p>
+      </footer>
+    </aside>
+
+    <section class="inspector" id="inspector" hidden aria-live="polite"></section>
+
+    <div class="time-badge" id="timeBadge" hidden></div>
+
+    <div class="map-tools">
+      <button class="tool" id="btn3d" title="Alternar 2D/3D" aria-pressed="true">3D</button>
+      <button class="tool" id="btnOrbit" title="Girar câmera" aria-pressed="false">
+        <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v5h-5" /></svg>
+      </button>
+      <button class="tool" id="btnReset" title="Voltar à visão geral">
+        <svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" /></svg>
+      </button>
+    </div>
+
+    <div class="pick-hint" id="pickHint" hidden></div>
+    <div class="toast" id="toast" role="alert"></div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

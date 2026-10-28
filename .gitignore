@@ -1,0 +1,12 @@
+node_modules
+dist
+.env
+.env.local
+data/raw/*
+!data/raw/.gitkeep
+*.log
+.DS_Store
+
+# Arquivos temporários de atualização
+*.zip
+_tmp_*
