@@ -10,3 +10,6 @@ data/raw/*
 # Arquivos temporários de atualização
 *.zip
 _tmp_*
+
+# Vídeo de demonstração (grande demais para o repositório)
+*.mp4
