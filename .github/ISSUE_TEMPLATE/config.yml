@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 🔒 Vulnerabilidade de segurança
+    url: https://github.com/JH-2002/trajeto-seguro-sp/security/advisories/new
+    about: Reporte falhas de segurança de forma privada, não em issues públicas.

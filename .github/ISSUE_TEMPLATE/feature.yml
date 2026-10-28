@@ -1,0 +1,29 @@
+name: 💡 Sugerir uma melhoria
+description: Ideia de funcionalidade, fonte de dados ou ajuste
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problema
+    attributes:
+      label: Qual problema isso resolve?
+      description: Explique a necessidade antes da solução.
+    validations:
+      required: true
+  - type: textarea
+    id: proposta
+    attributes:
+      label: Proposta
+      description: Como você imagina que deveria funcionar?
+    validations:
+      required: true
+  - type: textarea
+    id: dados
+    attributes:
+      label: Dados e metodologia
+      description: Se envolve nova fonte de dados ou mudança no cálculo de risco, descreva a fonte, a licença e o efeito esperado.
+  - type: checkboxes
+    id: contribuir
+    attributes:
+      label: Contribuição
+      options:
+        - label: Gostaria de implementar isso eu mesmo(a)

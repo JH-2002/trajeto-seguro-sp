@@ -3,6 +3,26 @@
   "version": "0.1.0",
   "private": true,
   "description": "Mapa 3D interativo de criminalidade (SSP-SP) e acidentes (Infosiga-SP) em São Paulo, com sugestão de rotas mais seguras.",
+  "license": "MIT",
+  "author": "João Henrique Arruda do Carmo (https://github.com/JH-2002)",
+  "homepage": "https://jh-2002.github.io/trajeto-seguro-sp/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JH-2002/trajeto-seguro-sp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JH-2002/trajeto-seguro-sp/issues"
+  },
+  "keywords": [
+    "sao-paulo",
+    "seguranca-publica",
+    "mapa-de-calor",
+    "rotas",
+    "maplibre",
+    "deckgl",
+    "dados-abertos",
+    "geospatial"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",

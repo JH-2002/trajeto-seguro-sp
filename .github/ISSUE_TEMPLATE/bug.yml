@@ -1,0 +1,32 @@
+name: 🐞 Reportar um bug
+description: Algo não funciona como deveria
+labels: [bug]
+body:
+  - type: textarea
+    id: oque
+    attributes:
+      label: O que aconteceu?
+      description: Descreva o problema e o que você esperava que acontecesse.
+    validations:
+      required: true
+  - type: textarea
+    id: passos
+    attributes:
+      label: Como reproduzir
+      description: Passo a passo. Se for uma rota, cole o link do botão "Copiar link desta rota".
+      placeholder: |
+        1. Abrir o site
+        2. Escolher origem e destino...
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: ambiente
+    attributes:
+      label: Navegador e sistema
+      placeholder: ex.: Chrome 130 no Windows 11
+  - type: textarea
+    id: extra
+    attributes:
+      label: Prints ou mensagens de erro
+      description: Prints da tela ou erros do console do navegador (F12) ajudam bastante.

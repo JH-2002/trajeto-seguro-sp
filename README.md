@@ -3,12 +3,14 @@
 [![CI](https://github.com/JH-2002/trajeto-seguro-sp/actions/workflows/ci.yml/badge.svg)](https://github.com/JH-2002/trajeto-seguro-sp/actions/workflows/ci.yml)
 [![Deploy](https://github.com/JH-2002/trajeto-seguro-sp/actions/workflows/deploy.yml/badge.svg)](https://jh-2002.github.io/trajeto-seguro-sp/)
 [![Dados](https://github.com/JH-2002/trajeto-seguro-sp/actions/workflows/update-data.yml/badge.svg)](https://github.com/JH-2002/trajeto-seguro-sp/actions/workflows/update-data.yml)
+[![Licença: MIT](https://img.shields.io/badge/licen%C3%A7a-MIT-2ee59d.svg)](LICENSE)
+[![Contribuições bem-vindas](https://img.shields.io/badge/contribui%C3%A7%C3%B5es-bem--vindas-ffa726.svg)](CONTRIBUTING.md)
 
 **Mapa 3D da criminalidade em São Paulo, com rotas que desviam das áreas de maior risco.**
 
 Os dados vêm de bases públicas: crimes da **SSP-SP**, coletados por web scraping e atualizados todo mês; acidentes do **Infosiga-SP**; e iluminação pública do **GeoSampa**. O app mostra onde e **em que horário** as ocorrências se concentram e sugere o trajeto de menor exposição dentro do tempo extra que você aceita.
 
-🔗 **Demo:** https://jh-2002.github.io/trajeto-seguro-sp/
+🔗 **Demo:** https://jh-2002.github.io/trajeto-seguro-sp/ · 🤝 **[Como contribuir](CONTRIBUTING.md)**
 
 ![Demonstração](docs/demo.gif)
 
@@ -71,24 +73,11 @@ Outras opções:
 - `npm run data:scrape -- --dry-run` mostra o que foi encontrado, sem baixar.
 - `npm run data -- --help` lista as opções de processamento.
 
-## Publicando (GitHub Pages)
+## Publicando o seu próprio fork
 
-1. Suba o projeto para um repositório no GitHub.
-2. Em **Settings → Pages**, escolha **Source: GitHub Actions**.
-3. A cada push na `main`, o workflow `deploy.yml` faz o build e publica o site em `https://<usuário>.github.io/<repositório>/`.
-
-Para o workflow mensal conseguir fazer commit dos dados, ative **Settings → Actions → General → Workflow permissions → Read and write**.
-
-Os badges e o link no topo deste README assumem o repositório `JH-2002/trajeto-seguro-sp`. Ajuste se usar outro nome.
-
-### Gravando o GIF da demonstração
-
-Grave 20–30 segundos com o [ScreenToGif](https://www.screentogif.com/) (Windows) e salve como `docs/demo.gif`. Uma sequência que funciona bem:
-
-1. Visão geral 3D.
-2. Play na linha do tempo, mostrando o calor se movendo pela cidade.
-3. Uma rota calculada com os trechos evitados em vermelho.
-4. O inspetor de área aberto num ponto.
+1. Faça um fork e, em **Settings → Pages**, escolha **Source: GitHub Actions**.
+2. Em **Settings → Actions → General → Workflow permissions**, marque **Read and write** (necessário para a atualização mensal dos dados).
+3. A cada push na `main`, o workflow `deploy.yml` publica o site em `https://<usuário>.github.io/<repositório>/`.
 
 ## Estrutura
 
@@ -131,9 +120,23 @@ Todos são gratuitos e sem chave de API, mas são servidores comunitários com p
 - A cobertura de iluminação do OpenStreetMap é parcial. O GeoSampa é a fonte preferida.
 - A rota sugerida é uma recomendação estatística. Ela não garante segurança.
 
-## Fontes de dados
+## Contribuindo
 
-- **SSP-SP**: estatísticas criminais abertas (<https://www.ssp.sp.gov.br/estatistica/consultas>)
-- **Infosiga-SP / DETRAN-SP**: sinistros de trânsito
-- **GeoSampa / Prefeitura de São Paulo**: pontos de iluminação pública
-- **© Colaboradores do OpenStreetMap**: mapa base, roteamento e iluminação alternativa (ODbL)
+Contribuições são muito bem-vindas, de correções pequenas a novas funcionalidades. O guia [CONTRIBUTING.md](CONTRIBUTING.md) explica como rodar o projeto, os padrões de código e os cuidados com os dados, e traz uma lista de ideias para começar. Procure também as issues marcadas como **`good first issue`**.
+
+Ao participar, você concorda com o [Código de Conduta](CODE_OF_CONDUCT.md). Falhas de segurança devem ser reportadas de forma privada, conforme o [SECURITY.md](SECURITY.md).
+
+## Fontes de dados e licenças
+
+O **código** está sob a [licença MIT](LICENSE). Os **dados** em `public/data/` mantêm a licença das fontes:
+
+| Fonte | Uso | Licença |
+|---|---|---|
+| [SSP-SP](https://www.ssp.sp.gov.br/estatistica/consultas) | ocorrências criminais | CC BY 4.0 (Dados Abertos SP) |
+| [Infosiga-SP / DETRAN-SP](https://infosiga.detran.sp.gov.br/) | sinistros de trânsito | dados abertos |
+| GeoSampa / Prefeitura de São Paulo | pontos de iluminação pública | dados abertos |
+| © [Colaboradores do OpenStreetMap](https://www.openstreetmap.org/copyright) | mapa base, roteamento e iluminação alternativa | ODbL 1.0 |
+
+## Autor
+
+Criado por **João Henrique Arruda do Carmo** ([@JH-2002](https://github.com/JH-2002)).
